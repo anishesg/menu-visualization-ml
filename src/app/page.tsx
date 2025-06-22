@@ -270,7 +270,7 @@ export default function MenuUploader() {
                       Remove
                     </button>
                   </div>
-                </div>
+        </div>
               )}
               
               {/* Upload Button */}
