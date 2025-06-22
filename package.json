@@ -1,7 +1,15 @@
 {
-  "name": "menu-visualization-nextjs",
-  "version": "0.1.0",
+  "name": "menuvision",
+  "version": "1.0.0",
   "private": true,
+  "description": "AI-powered menu visualization tool that transforms restaurant menu photos into stunning visual menus with intelligent food image matching",
+  "keywords": ["menu", "visualization", "AI", "restaurant", "food", "OpenAI", "Next.js"],
+  "author": "MenuVision Team",
+  "homepage": "https://menuvision.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anishesg/menu-visualization-ml.git"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

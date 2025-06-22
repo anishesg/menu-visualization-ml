@@ -1,0 +1,71 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- MenuVision Logo -->
+  <circle cx="200" cy="200" r="80" fill="white" opacity="0.9"/>
+  <rect x="140" y="160" width="120" height="80" rx="8" fill="#3b82f6"/>
+  
+  <!-- Menu lines -->
+  <rect x="150" y="175" width="60" height="8" rx="4" fill="white"/>
+  <rect x="150" y="190" width="90" height="8" rx="4" fill="white"/>
+  <rect x="150" y="205" width="45" height="8" rx="4" fill="white"/>
+  <rect x="150" y="220" width="75" height="8" rx="4" fill="white"/>
+  
+  <!-- AI Vision Symbol -->
+  <circle cx="220" cy="190" r="20" fill="#10b981"/>
+  <circle cx="220" cy="190" r="12" fill="white"/>
+  <circle cx="220" cy="190" r="4" fill="#10b981"/>
+  
+  <!-- Main Title -->
+  <text x="350" y="180" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="bold" fill="white">
+    MenuVision
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="350" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="36" fill="white" opacity="0.9">
+    AI-Powered Menu Visualization
+  </text>
+  
+  <!-- Description -->
+  <text x="350" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="white" opacity="0.8">
+    Transform restaurant menus into stunning visual experiences
+  </text>
+  <text x="350" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="white" opacity="0.8">
+    with intelligent food image matching
+  </text>
+  
+  <!-- Feature Icons -->
+  <!-- Camera Icon -->
+  <rect x="350" y="380" width="40" height="30" rx="6" fill="white" opacity="0.9"/>
+  <circle cx="370" cy="395" r="8" fill="#3b82f6"/>
+  <text x="400" y="405" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="white" opacity="0.8">
+    Photo Upload
+  </text>
+  
+  <!-- AI Icon -->
+  <circle cx="570" cy="395" r="20" fill="white" opacity="0.9"/>
+  <text x="575" y="403" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="bold" fill="#3b82f6">AI</text>
+  <text x="600" y="405" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="white" opacity="0.8">
+    Text Extraction
+  </text>
+  
+  <!-- Image Icon -->
+  <rect x="790" y="380" width="40" height="30" rx="6" fill="white" opacity="0.9"/>
+  <rect x="800" y="388" width="20" height="14" rx="2" fill="#10b981"/>
+  <text x="840" y="405" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="white" opacity="0.8">
+    Beautiful Images
+  </text>
+  
+  <!-- Bottom tech stack -->
+  <text x="350" y="500" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="white" opacity="0.6">
+    Powered by OpenAI • Google Custom Search • Next.js
+  </text>
+</svg> 

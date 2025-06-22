@@ -1,0 +1,28 @@
+{
+  "name": "MenuVision - AI Menu Visualization",
+  "short_name": "MenuVision",
+  "description": "Transform restaurant menu photos into stunning visual menus with AI-powered food image matching",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#3b82f6",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["productivity", "business", "food"],
+  "screenshots": [],
+  "prefer_related_applications": false
+} 
