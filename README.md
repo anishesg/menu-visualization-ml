@@ -1,113 +1,36 @@
-# 🍽️ Menu Visualizer App
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-An AI-powered application that extracts menu items from images and displays them with automatically found food images.
+## Getting Started
 
-## Features
+First, run the development server:
 
-- 📷 Upload menu images (JPG, PNG, etc.)
-- 🤖 AI-powered menu item extraction using GPT-4o-mini
-- 🖼️ Automatic image search for each menu item using Google Custom Search
-- 📱 Responsive web interface built with React and Tailwind CSS
-- ⚡ Real-time processing with error handling
-
-## Prerequisites
-
-- Python 3.8+ 
-- Node.js 14+
-- OpenAI API key
-- Google Custom Search API key and Search Engine ID
-
-## Setup Instructions
-
-### 1. Clone and Navigate
 ```bash
-cd menu_images_ML_app
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-### 2. Backend Setup
-```bash
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-# Install Python dependencies
-cd backend
-pip install -r requirements.txt
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-# Create .env file with your API keys
-# Copy the following into backend/.env:
-OPENAI_API_KEY=your-openai-api-key-here
-GOOGLE_API_KEY=your-google-api-key-here
-GOOGLE_CSE_ID=your-google-cse-id-here
-```
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-### 3. Frontend Setup
-```bash
-cd ../frontend
-npm install
-```
+## Learn More
 
-## Running the Application
+To learn more about Next.js, take a look at the following resources:
 
-### 1. Start the Backend Server
-```bash
-cd backend
-source ../venv/bin/activate
-python app.py
-```
-The backend will start on http://localhost:5001
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-### 2. Start the Frontend (in a new terminal)
-```bash
-cd frontend
-npm start
-```
-The frontend will start on http://localhost:3000
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Usage
+## Deploy on Vercel
 
-1. Open http://localhost:3000 in your web browser
-2. Click "Choose File" and select a menu image
-3. Click "Upload & Process Menu"
-4. Wait for AI processing (may take 30-60 seconds)
-5. View extracted menu items with automatically found images
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-## API Endpoints
-
-- `GET /api/health` - Health check endpoint
-- `POST /api/upload` - Upload menu image for processing
-
-## Technologies Used
-
-- **Backend**: Flask, OpenAI API, Google Custom Search API
-- **Frontend**: React, Tailwind CSS, Axios
-- **AI**: GPT-4o-mini for image analysis
-
-## Troubleshooting
-
-- **Port 5000 conflict**: The app uses port 5001 for the backend to avoid conflicts with macOS AirPlay
-- **API key errors**: Ensure your `.env` file is in the `backend/` directory with valid API keys
-- **CORS errors**: Make sure both frontend and backend are running
-- **Image loading errors**: Some Google image URLs may not work due to CORS restrictions
-
-## File Structure
-```
-menu_images_ML_app/
-├── backend/
-│   ├── app.py              # Flask server
-│   ├── requirements.txt    # Python dependencies
-│   ├── .env               # API keys (create this)
-│   └── .gitignore
-├── frontend/
-│   ├── src/
-│   │   ├── App.js         # Main React component
-│   │   ├── MenuUploader.js # Upload and display component
-│   │   └── index.css      # Tailwind CSS
-│   ├── package.json
-│   └── tailwind.config.js
-└── venv/                  # Virtual environment
-```
-
-## License
-
-MIT License 
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
