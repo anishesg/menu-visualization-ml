@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import axios from "axios";
 
 interface MenuItem {
@@ -246,9 +247,11 @@ export default function MenuUploader() {
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
                     <div className="flex items-center space-x-3">
                       {capturedPhoto && (
-                        <img 
+                        <Image 
                           src={capturedPhoto} 
                           alt="Captured menu" 
+                          width={80}
+                          height={80}
                           className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg"
                         />
                       )}
@@ -356,9 +359,12 @@ export default function MenuUploader() {
                 <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="relative">
                     {item.image ? (
-                      <img
+                      <Image
                         src={item.image}
                         alt={item.item}
+                        width={400}
+                        height={192}
+                        unoptimized
                         className="w-full h-48 object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;

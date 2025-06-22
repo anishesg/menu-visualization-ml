@@ -184,7 +184,7 @@ async function getEnhancedImagesForDish(dishName: string, apiKey: string, cseId:
         console.log(`   ✅ Found enough images (${allImageUrls.length}), stopping search`);
         break;
       }
-    } catch (error) {
+    } catch {
       console.log(`   ❌ Strategy failed: "${strategy}"`);
       continue;
     }
