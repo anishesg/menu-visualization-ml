@@ -111,7 +111,7 @@ async function fetchImageForItem(item: string): Promise<string[]> {
   console.log(`🔍 Searching for images for: "${cleanItem}"`);
 
   try {
-    // Get 3 images using enhanced search strategy
+    // Get images using simplified search strategy  
     const allImageUrls = await getEnhancedImagesForDish(cleanItem, GOOGLE_API_KEY, GOOGLE_CSE_ID);
     
     if (allImageUrls.length === 0) {
@@ -121,15 +121,18 @@ async function fetchImageForItem(item: string): Promise<string[]> {
 
     console.log(`📷 Found ${allImageUrls.length} candidate images for: "${cleanItem}"`);
 
-    // Let GPT analyze and pick the best URL from all candidates
-    const bestUrl = await getAiSelectedImage(cleanItem, allImageUrls);
+    // Remove duplicates and limit to 6 for AI analysis
+    const uniqueUrls = [...new Set(allImageUrls)].slice(0, 6);
+
+    // Let AI pick the best URL from candidates
+    const bestUrl = await getAiSelectedImage(cleanItem, uniqueUrls);
     if (bestUrl) {
       console.log(`✨ AI selected best image for: "${cleanItem}"`);
       return [bestUrl];
     }
 
     console.log(`⚠️ AI couldn't select a good image for: "${cleanItem}", using first available`);
-    return allImageUrls.slice(0, 1);
+    return uniqueUrls.slice(0, 1);
   } catch (error) {
     console.error(`Error fetching images for ${item}:`, error);
     return [];
@@ -137,50 +140,26 @@ async function fetchImageForItem(item: string): Promise<string[]> {
 }
 
 async function getEnhancedImagesForDish(dishName: string, apiKey: string, cseId: string): Promise<string[]> {
-  // Enhanced search strategies with better terms for food photography
+  // Simplified search approach - just 2 high-quality strategies
   const searchStrategies = [
-    // Pinterest - great for food photography
-    `${dishName} pinterest recipe food photography`,
-    `${dishName} pinterest food blog beautiful`,
+    // Strategy 1: Clean, simple search
+    dishName,
     
-    // Food blogs and recipe sites - professional food photos
-    `${dishName} food blog recipe site:allrecipes.com OR site:foodnetwork.com`,
-    `${dishName} cooking blog gourmet photography`,
-    `${dishName} recipe blog professional food photography`,
-    
-    // Restaurant and professional sources
-    `${dishName} restaurant menu dish plated professional`,
-    `${dishName} gourmet restaurant presentation food styling`,
-    `${dishName} chef prepared restaurant quality`,
-    
-    // Food photography specific terms
-    `${dishName} food photography styled appetizing`,
-    `${dishName} culinary arts food styling photography`,
-    
-    // Backup searches
-    `${dishName} delicious food photo high quality`,
-    `${dishName} homemade recipe beautiful presentation`
+    // Strategy 2: Pinterest search (known for high-quality food photography)
+    `${dishName} pinterest`,
   ];
 
   const allImageUrls: string[] = [];
-  const targetImagesCount = 3;
-
-  console.log(`🔍 Running enhanced search for: "${dishName}"`);
-
+  
   for (const strategy of searchStrategies) {
+    console.log(`   🔎 Trying: "${strategy}"`);
+    
     try {
-      console.log(`   🔎 Trying: "${strategy}"`);
       const urls = await getImagesFromSearch(strategy, 3, apiKey, cseId);
+      allImageUrls.push(...urls);
       
-      // Add unique URLs only
-      for (const url of urls) {
-        if (!allImageUrls.includes(url) && allImageUrls.length < 10) {
-          allImageUrls.push(url);
-        }
-      }
-
-      // Stop if we have enough good candidates
-      if (allImageUrls.length >= targetImagesCount) {
+      // Stop once we have enough images from both strategies  
+      if (allImageUrls.length >= 6) {
         console.log(`   ✅ Found enough images (${allImageUrls.length}), stopping search`);
         break;
       }
@@ -190,8 +169,7 @@ async function getEnhancedImagesForDish(dishName: string, apiKey: string, cseId:
     }
   }
 
-  // Return the best candidates (limit to 3 for AI analysis)
-  return allImageUrls.slice(0, 3);
+  return allImageUrls;
 }
 
 async function getImagesFromSearch(searchQuery: string, num: number, apiKey: string, cseId: string): Promise<string[]> {
@@ -241,37 +219,22 @@ async function getAiSelectedImage(dishName: string, imageUrls: string[]): Promis
     // Create a prompt for GPT to analyze the URLs
     const urlList = imageUrls.map((url, i) => `${i + 1}. ${url}`).join('\n');
 
-    const prompt = `You are an expert food photography curator for a premium menu visualization app. Analyze these image URLs for the dish "${dishName}" and select the BEST one that will make customers want to order this dish.
+    const prompt = `Pick the BEST image URL for "${dishName}" that looks most appetizing and professional.
 
-URLs to analyze:
+URLs:
 ${urlList}
 
-PRIORITIZE URLs from these high-quality sources:
-🏆 PREMIUM SOURCES (choose these first):
-- Pinterest URLs (pinterest.com) - usually high-quality food photography
-- Food Network, AllRecipes, Bon Appétit - professional recipe sites
-- Food blogs with "blog", "recipe", "cooking" in URL
-- Restaurant websites with professional food photography
-- Food photography portfolios and culinary websites
+CHOOSE URLs from:
+✅ Pinterest.com (best food photos)
+✅ Food blogs & recipe sites  
+✅ Restaurant websites
 
-🔍 LOOK FOR INDICATORS OF QUALITY:
-- Professional food styling and presentation
-- Appetizing, well-lit, restaurant-quality plating
-- Clear, high-resolution image indicators in URL
-- Recipe or food blog sites (not menu screenshots)
-- Gourmet or chef-prepared presentation
+AVOID:
+❌ Stock photo sites
+❌ Menu screenshots
+❌ Social media profiles
 
-❌ AVOID THESE RED FLAGS:
-- Generic stock photo sites
-- Menu PDFs or text-heavy menu screenshots  
-- Tiny thumbnails or low-resolution indicators
-- Shopping/e-commerce product photos
-- Social media profile pictures or casual food photos
-- Logos, icons, or non-food related images
-
-Analyze the URL structure, domain, and path to determine image quality and relevance. Choose the URL most likely to contain a professional, appetizing photo of "${dishName}".
-
-Respond with ONLY the number (1, 2, or 3) of the best URL. If none meet quality standards, respond with "NONE".`;
+Choose the most appetizing and professional URL. Respond with ONLY the number of the best URL, or "NONE".`;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
