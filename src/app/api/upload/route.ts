@@ -45,8 +45,24 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ menu: results });
   } catch (error) {
     console.error('Upload error:', error);
+    
+    // Provide more specific error messages
+    let errorMessage = 'Internal server error';
+    
+    if (error instanceof Error) {
+      if (error.message.includes('OPENAI_API_KEY')) {
+        errorMessage = 'OpenAI API key is missing. Please check environment variables.';
+      } else if (error.message.includes('GOOGLE_API_KEY')) {
+        errorMessage = 'Google API key is missing. Please check environment variables.';
+      } else if (error.message.includes('Search API error')) {
+        errorMessage = 'Google Custom Search API error. Please check your API configuration.';
+      } else {
+        errorMessage = `Error: ${error.message}`;
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
