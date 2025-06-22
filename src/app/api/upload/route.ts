@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     const base64Image = buffer.toString('base64');
 
     // Extract menu items using OpenAI
-    const menuItems = await extractMenuItems(base64Image);
+    const menuItems = await extractMenuItems(base64Image, file.type);
     
     // Get AI-selected images for each item
     const results: MenuItem[] = [];
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function extractMenuItems(base64Image: string): Promise<string[]> {
+async function extractMenuItems(base64Image: string, fileType: string = 'image/png'): Promise<string[]> {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -87,7 +87,7 @@ async function extractMenuItems(base64Image: string): Promise<string[]> {
             {
               type: "image_url",
               image_url: {
-                url: `data:image/jpeg;base64,${base64Image}`
+                url: `data:${fileType};base64,${base64Image}`
               }
             }
           ]
