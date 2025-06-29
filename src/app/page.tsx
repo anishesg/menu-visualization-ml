@@ -7,6 +7,7 @@ import axios from "axios";
 interface MenuItem {
   item: string;
   image: string | null;
+  calories: number | null;
 }
 
 export default function MenuUploader() {
@@ -191,7 +192,7 @@ export default function MenuUploader() {
             🍽️ Menu Visualizer
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
-            Upload a menu photo and let AI extract items with beautiful food images
+            Upload a menu photo and let AI extract items with beautiful food images and calorie estimates
           </p>
         </div>
 
@@ -349,9 +350,32 @@ export default function MenuUploader() {
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
                 🍽️ Menu Items Found
               </h2>
-              <p className="text-gray-600 text-sm sm:text-base">
-                Discovered {menuData.length} delicious items
+              <p className="text-gray-600 text-sm sm:text-base mb-4">
+                Discovered {menuData.length} delicious items with AI-powered calorie estimates
               </p>
+              
+              {/* Calorie Statistics */}
+              {(() => {
+                const itemsWithCalories = menuData.filter(item => item.calories !== null);
+                const totalCalories = itemsWithCalories.reduce((sum, item) => sum + (item.calories || 0), 0);
+                const avgCalories = itemsWithCalories.length > 0 ? Math.round(totalCalories / itemsWithCalories.length) : 0;
+                
+                return itemsWithCalories.length > 0 ? (
+                  <div className="flex justify-center">
+                    <div className="inline-flex items-center space-x-4 bg-orange-50 border border-orange-200 rounded-lg px-4 py-2">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-orange-800">{avgCalories}</div>
+                        <div className="text-xs text-orange-600">Avg Calories</div>
+                      </div>
+                      <div className="w-px h-8 bg-orange-200"></div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-orange-800">{itemsWithCalories.length}/{menuData.length}</div>
+                        <div className="text-xs text-orange-600">Items Analyzed</div>
+                      </div>
+                    </div>
+                  </div>
+                ) : null;
+              })()}
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
@@ -394,6 +418,17 @@ export default function MenuUploader() {
                     <h3 className="font-bold text-sm sm:text-base text-gray-800 leading-tight mb-2">
                       {item.item.split(' - $')[0] || item.item.split(' $')[0] || item.item}
                     </h3>
+                    
+                    {/* Calorie Information */}
+                    {item.calories && (
+                      <div className="mb-2">
+                        <div className="inline-flex items-center space-x-1 bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
+                          <span>🔥</span>
+                          <span>{item.calories} cal</span>
+                        </div>
+                      </div>
+                    )}
+                    
                     <div className="flex items-center justify-between text-xs text-gray-500">
                       <span>AI Selected</span>
                       <span>#{index + 1}</span>

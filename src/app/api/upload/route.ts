@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 interface MenuItem {
   item: string;
   image: string | null;
+  calories: number | null;
 }
 
 interface GoogleSearchResult {
@@ -32,13 +33,15 @@ export async function POST(request: NextRequest) {
     // Extract menu items using OpenAI
     const menuItems = await extractMenuItems(base64Image, file.type);
     
-    // Get AI-selected images for each item
+    // Get AI-selected images and calorie estimates for each item
     const results: MenuItem[] = [];
     for (const item of menuItems) {
       const images = await fetchImageForItem(item);
+      const calories = await getCalorieEstimate(item);
       results.push({
         item,
-        image: images.length > 0 ? images[0] : null
+        image: images.length > 0 ? images[0] : null,
+        calories
       });
     }
 
@@ -279,5 +282,71 @@ Choose the most appetizing and professional URL. Respond with ONLY the number of
     console.error('Error in AI image selection:', error);
     // Fallback to first URL if AI selection fails
     return imageUrls[0] || null;
+  }
+}
+
+async function getCalorieEstimate(item: string): Promise<number | null> {
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
+  try {
+    // Clean up the item name to get just the dish name
+    let cleanItem = item.split(' - $')[0].split(' $')[0].trim();
+    cleanItem = cleanItem.replace(/\*/g, '').replace(/-/g, '').trim();
+    cleanItem = cleanItem.replace(/^[0-9.-\s]+/, '').trim();
+
+    // Skip category headers and empty items
+    const categoryHeaders = ['soups', 'starters', 'salads', 'entrees', 'pastas', 'appetizers', 'mains', 'desserts'];
+    if (cleanItem.length < 3 || categoryHeaders.includes(cleanItem.toLowerCase())) {
+      return null;
+    }
+
+    console.log(`🔥 Estimating calories for: "${cleanItem}"`);
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "user",
+          content: `Estimate the calories for this food item: "${cleanItem}"
+
+Please provide a reasonable estimate based on typical restaurant portions. Consider:
+- Standard restaurant serving sizes
+- Common ingredients and preparation methods
+- Typical caloric density for this type of dish
+
+Respond with ONLY a number (the estimated calories). If you cannot make a reasonable estimate, respond with "UNKNOWN".
+
+Examples:
+- Caesar Salad: 470
+- Cheeseburger: 750
+- Chicken Teriyaki: 580
+- Chocolate Cake: 520`
+        }
+      ],
+      max_tokens: 20,
+      temperature: 0.1
+    });
+
+    const content = response.choices[0]?.message?.content?.trim();
+    
+    if (!content || content === "UNKNOWN") {
+      console.log(`❓ Could not estimate calories for: "${cleanItem}"`);
+      return null;
+    }
+
+    const calories = parseInt(content);
+    if (isNaN(calories) || calories <= 0 || calories > 5000) {
+      console.log(`⚠️ Invalid calorie estimate "${content}" for: "${cleanItem}"`);
+      return null;
+    }
+
+    console.log(`✅ Estimated ${calories} calories for: "${cleanItem}"`);
+    return calories;
+
+  } catch (error) {
+    console.error(`Error estimating calories for ${item}:`, error);
+    return null;
   }
 } 
